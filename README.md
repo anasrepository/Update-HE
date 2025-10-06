@@ -1,76 +1,64 @@
-# Welcome to your Expo app 👋
+# Healthy Empower
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Healthy Empower is a graduate-level project designed to help users take control of their health journey. It combines a mobile frontend (built with Expo/React Native) and a Node.js backend to track food, exercise, progress, and goals—all in one place. This app is intended for those who want to log their meals, plan workouts, and visualize their progress in a streamlined, distraction-free environment.
 
-## Local Development
+## Features
 
-0. Set appropriate API_URL
-   Navigate to file /healthy-empower/constants/DBAPI.ts and set the appropriate API_URL for yourself.
+- **Personalized Fitness Assessment**: Fill out a form to get a sense of your current fitness standing.
+- **Food Logging**: Add, view, and analyze daily meal entries; track calories, macros, and meal types.
+- **Workout Tracking & Plans**: Record exercises, log sets/reps/duration, and create or follow workout plans.
+- **Progress & Achievements**: See your achievements and how you’re advancing toward health goals.
+- **User Authentication**: Secure sign-in/sign-up and profile management.
+- **Guides & Onboarding**: Step-by-step guidance for new users.
 
-1. Install dependencies
+## Installation & Local Development
 
+1. **Set Your API URL**
+   - Open `/healthy-empower/constants/DBAPI.ts` and set the appropriate `API_URL` for your environment.
+
+2. **Install Dependencies**
    ```bash
    npm install
    ```
-
-   or 
-
+   or
    ```bash
    yarn install
    ```
 
-
-2. Start the backend service
-   Navigate to folder /healthy-empower/user-service/src/ and run
-
-   ```bash
-    node app.js
+3. **Start the Backend Service**
+   ```
+   cd healthy-empower/user-service/src/
+   node app.js
    ```
 
-3. Start the frontend app
-   Navigate to main project folder /healthy-empower/ and run
-
-   ```bash
-    npx expo start
+4. **Start the Frontend App**
+   ```
+   cd healthy-empower/
+   npx expo start
+   ```
+   or
+   ```
+   yarn start
    ```
 
-   or 
+   _Note: Stick to either npm or yarn—don’t mix them, or you may run into dependency issues._
 
-   ```bash
-    yarn start
-   ```
+## Database
 
-   **Note**: Stick to using one package manager to avoid dependency issues
+- Uses SQLite for local storage (mobile).
+- Food, exercises, meals, achievements, and goals are all stored in tables (see `utils/database.ts`).
 
-In the output, you'll find options to open the app in a
+## Usage
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Once setup is complete, you can:
+- Sign in, fill out your profile, and begin tracking food and exercise.
+- Create and follow workout plans or log ad-hoc workouts.
+- Browse guides and use the app’s suggestions to help build habits.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Contributing
 
-## Get a fresh project
+Pull requests are welcome. For major changes, please open an issue first to discuss what you’d like to change.
 
-When you're ready, run:
+## License
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is for educational use. See the LICENSE file for more information.
