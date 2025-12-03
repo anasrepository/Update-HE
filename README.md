@@ -57,9 +57,9 @@ Once setup is complete, you can:
 
 ## Some Pictures
 
-![Screenshot_20251203-115309~2](https://github.com/user-attachments/assets/25a2622e-8fa7-4f8a-a2eb-4d63165a3338)
-![Screenshot_20251203-115343~2](https://github.com/user-attachments/assets/939ad893-6210-43d4-b0bc-e1a78df30371)
-![Screenshot_20251203-115357~2](https://github.com/user-attachments/assets/5f546303-b559-4857-b96a-35e5fb5fb9d2)
+<img src="https://github.com/user-attachments/assets/25a2622e-8fa7-4f8a-a2eb-4d63165a3338" hight="400">
+<img src="https://github.com/user-attachments/assets/939ad893-6210-43d4-b0bc-e1a78df30371" hight="400">
+<img src="https://github.com/user-attachments/assets/5f546303-b559-4857-b96a-35e5fb5fb9d2" hight="400">
 
 ## Contributing
 
