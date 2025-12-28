@@ -1,9 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NetworkScanner } from "@/utils/networkScanner";
 import NetInfo from '@react-native-community/netinfo';
+//////////////////////////////////////////////////
+import { Platform } from "react-native";
 
+const DEV_HOST = "192.168.1.109"; // your machine IP
+const PORT = 3001;
+
+export function resolveBaseURL() {
+  if (Platform.OS === "android") {
+    return `http://10.0.2.2:${PORT}`;   // Android emulator only
+  }
+
+  if (Platform.OS === "web") {
+    return `http://${DEV_HOST}:${PORT}`; // Expo Web
+  }
+
+  return `http://${DEV_HOST}:${PORT}`;   // iOS / physical device
+}
+/////////////////////////////////////////////////////
 export class APIConfiguration{
-    private static currentURL: string = 'http://10.0.2.2:3001' // fallback or emulator is using this
+    private static currentURL: string = resolveBaseURL();//'http://10.0.2.2:3001' // fallback or emulator is using this
     private static isInitialized: boolean = false;
     private static initPromise: Promise<string> | null = null;
     private static lastNetworkIP: string | null = null;

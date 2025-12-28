@@ -17,6 +17,9 @@ const ExerciseController = require('./controllers/exerciseController');
 const WorkoutPlanController = require('./controllers/workoutPlanController');
 const WorkoutPlanExerciseController = require('./controllers/workoutPlanExerciseController');
 const WorkoutLogController = require('./controllers/workoutLogController'); 
+const AchievementController = require('./controllers/achievementController'); 
+
+
 
 const  discoveryRouteFactory = require('./routes/discoveryRoute');
 const userRoutesFactory = require('./routes/userRoutes');
@@ -30,6 +33,7 @@ const exerciseRoutesFactory = require('./routes/exerciseRoutes');
 const workoutPlanRoutesFactory = require('./routes/workoutPlansRoutes');
 const workoutPlanExerciseRoutesFactory = require('./routes/workoutPlanExerciseRoutes');
 const workoutLogRoutesFactory = require('./routes/workoutLogRoutes');
+const achievementRoutesFactory = require('./routes/achievementRoutes');
 
 const app = express(); 
 const port = 3001; 
@@ -47,6 +51,7 @@ const exerciseController = new ExerciseController();
 const workoutPlanController = new WorkoutPlanController(); 
 const workoutPlanExerciseController = new WorkoutPlanExerciseController();
 const workoutLogController = new WorkoutLogController();
+const achievementController = new AchievementController();
 
 app.use('/api/discovery', discoveryRouteFactory());
 app.use('/api/users', userRoutesFactory(userController));
@@ -60,6 +65,7 @@ app.use('/api/units', unitRoutesFactory(unitOfMeasurementController));
 app.use('/api/workout-plans', workoutPlanRoutesFactory(workoutPlanController));
 app.use('/api/workout-plan-exercises', workoutPlanExerciseRoutesFactory(workoutPlanExerciseController));
 app.use('/api/users/:userId/workout-logs', workoutLogRoutesFactory(workoutLogController));
+app.use('/api/users/:userId/achievements', achievementRoutesFactory(achievementController));
 
 
 if (require.main === module) {

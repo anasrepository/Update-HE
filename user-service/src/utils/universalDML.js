@@ -40,11 +40,25 @@ function get(model, include = []){
       })
       console.log("Filters after parsing:", filters)
       
+	  /*
       // Auto-add user_id filter if userId parameter exists in route
       if (req.params.userId) {
         console.log("🔐 Universal DML: Auto-adding user_id filter for userId:", req.params.userId);
         filters.user_id = { eq: req.params.userId };
       }
+	  */
+		// Auto-add user_id filter ONLY if the model actually has user_id
+		if (
+		  req.params.userId &&
+		  model.rawAttributes&&
+		  model.rawAttributes.user_id
+		) {
+		  console.log(
+			"🔐 Universal DML: Auto-adding user_id filter for model:",
+			model.name
+		  );
+		  filters.user_id = { eq: req.params.userId };
+		}
       
       if (search){
          console.log("Search query:", search);
