@@ -69,6 +69,25 @@ const rawResult = await axios.get(`${apiUrl}/api/users/${userId}/achievements${p
 
     
   }
+  /*
+  static async delete(foodId: number){
+	console.log("Deleting food with id: ", foodId);
+	return api.delete('/foods/${foodId}');
+  }
+  */
+  
+  static async delete(foodId: number): Promise<void> {
+    if (!foodId) {
+      console.error('❌ FoodDBModal.delete: foodId is missing');
+      return;
+    }
+
+    const apiUrl = await API_URL();
+    console.log('🗑️ FoodDBModal.delete →', foodId);
+
+    await axios.delete(`${apiUrl}/api/foods/${foodId}`);
+  }
+  
 }
 
 class ExerciseDBModal {
@@ -139,6 +158,17 @@ class FoodDBModal {
         throw new Error(error.response?.data?.error || 'Failed to create food entry');
       }
   }
+  static async delete(foodId: number): Promise<void> {
+    if (!foodId) {
+      console.error('❌ FoodDBModal.delete: foodId is missing');
+      return;
+    }
+
+    const apiUrl = await API_URL();
+    console.log('🗑️ FoodDBModal.delete →', foodId);
+
+    await axios.delete(`${apiUrl}/api/foods/${foodId}`);
+  }
   
 
 }
@@ -173,7 +203,7 @@ class MealLogDBModal {
       throw new Error(error.response?.data?.error || 'Failed to log meal');
     }
   }
-  
+  /*
   static async delete(mealId: number): Promise<void> {
     const userId = await getUserId();
     if (!userId) {
@@ -188,6 +218,23 @@ class MealLogDBModal {
         throw new Error(err.response?.data?.error || 'Failed to delete meal log');
       });
   }
+  */
+  ////////////////////////////////
+  static async delete(logId: number): Promise<void> {
+    const apiUrl = await API_URL();
+    const userId = await getUserId();
+
+    if (!userId) {
+      throw new Error('No userId available for deleting meal log');
+    }
+
+    console.log('🗑️ DELETE MealLog →', `${apiUrl}/api/users/${userId}/meal-logs/${logId}`);
+
+    await axios.delete(
+      `${apiUrl}/api/users/${userId}/meal-logs/${logId}`
+    );
+  }
+  ////////////////////////////////
 }
 class WorkoutPlanExerciseDBModal {
   static async get(filter?: Filter<WorkoutPlanExercise>): Promise<WorkoutPlanExercise[]> {
@@ -247,7 +294,7 @@ class GoalDBModal {
     // since it's single maybe just making the updates as a boolean is better but just in case
     const submit = {
         // Note: Goal interface doesn't have completed field, might need to use target_value or other field
-        ...updates
+        //...updates
     }
     const userId = await getUserId();
     if (!userId) {

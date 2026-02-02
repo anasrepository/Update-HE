@@ -115,22 +115,22 @@ const CustomDrawerContent = (props: any) => {
         </View>
 
         <DrawerItem
-          icon={<FontAwesome5 name="baby" size={18} color={getIconColor('/(drawer)/(guide)/BeginnerGuide')} />}
+          icon={<FontAwesome5 name="baby" size={18} color={getIconColor('/(drawer)/(tabs)/BeginnerGuide')} />}
           label="Beginner"
-          onPress={() => handleNavigation('/(drawer)/(guide)/BeginnerGuide')}
-          active={activeItem === '/(drawer)/(guide)/BeginnerGuide'}
+          onPress={() => handleNavigation('/(drawer)/(tabs)/BeginnerGuide')}
+          active={activeItem === '/(drawer)/(tabs)/BeginnerGuide'}
         />
         <DrawerItem
           icon={<FontAwesome5 name="walking" size={18} color={getIconColor('/(drawer)/(guide)/IntermediateGuide')} />}
           label="Intermediate"
-          onPress={() => handleNavigation('/(drawer)/(guide)/IntermediateGuide')}
-          active={activeItem === '/(drawer)/(guide)/IntermediateGuide'}
+          onPress={() => handleNavigation('/(drawer)/(tabs)/IntermediateGuide')}
+          active={activeItem === '/(drawer)/(tabs)/IntermediateGuide'}
         />
         <DrawerItem
           icon={<FontAwesome5 name="running" size={18} color={getIconColor('/(drawer)/(guide)/ExpertGuide')} />}
           label="Expert"
-          onPress={() => handleNavigation('/(drawer)/(guide)/ExpertGuide')}
-          active={activeItem === '/(drawer)/(guide)/ExpertGuide'}
+          onPress={() => handleNavigation('/(drawer)/(tabs)/ExpertGuide')}
+          active={activeItem === '/(drawer)/(tabs)/ExpertGuide'}
         />
 
         <DrawerItem
@@ -263,13 +263,13 @@ export default function DrawerLayout() {
       />
 
       <Drawer.Screen 
-        name="(guide)/BeginnerGuide" 
+        name="(tabs)/BeginnerGuide" 
         options={{ 
           title: 'Beginner Guide',
         }} 
       />
       <Drawer.Screen 
-        name="(guide)/IntermediateGuide" 
+        name="(tabs)/IntermediateGuide" 
         options={{ 
           title: 'Intermediate Guide',
         }} 
@@ -281,7 +281,7 @@ export default function DrawerLayout() {
         }} 
       />
       <Drawer.Screen 
-        name="(guide)/ExpertGuide" 
+        name="(tabs)/ExpertGuide" 
         options={{ 
           title: 'Expert Guide',
         }} 

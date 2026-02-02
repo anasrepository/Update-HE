@@ -20,7 +20,6 @@ const WorkoutLogController = require('./controllers/workoutLogController');
 const AchievementController = require('./controllers/achievementController'); 
 
 
-
 const  discoveryRouteFactory = require('./routes/discoveryRoute');
 const userRoutesFactory = require('./routes/userRoutes');
 const healthProfileRoutesFactory = require('./routes/healthRoutes');
@@ -40,6 +39,10 @@ const port = 3001;
 const users = new Map();
 app.use(express.json());
 app.use(cors());
+
+
+
+
 const userController = new UserController();
 const healthProfileController = new HealthProfileController();
 const goalController = new GoalController();
@@ -52,6 +55,13 @@ const workoutPlanController = new WorkoutPlanController();
 const workoutPlanExerciseController = new WorkoutPlanExerciseController();
 const workoutLogController = new WorkoutLogController();
 const achievementController = new AchievementController();
+
+/*
+app.use((req,res,next) => {
+	console.log('-> ${req.method} ${req.originalUrl}');
+	next();
+});
+*/
 
 app.use('/api/discovery', discoveryRouteFactory());
 app.use('/api/users', userRoutesFactory(userController));

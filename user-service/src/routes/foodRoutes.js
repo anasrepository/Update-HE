@@ -5,6 +5,7 @@ module.exports = (foodController) => {
   router.get('/', foodController.get);
   router.get('/:food_id', foodController.getFoodById);
   router.post('/', foodController.createFood);
+  router.delete('/:food_id', foodController.deleteFood);
   
   return router;
 };

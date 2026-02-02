@@ -57,6 +57,37 @@ class MealLogController {
       res.status(500).json({ error: error.message });
     }
   }
+	//////////////////////////////////////////////
+	deleteMealLog = async (req, res) => {
+		console.log("Deleting Meal Log Hit:", req.params);
+	  try {
+		const { userId, logId } = req.params;
+
+		console.log('🗑️ DELETE MealLog HIT:', { userId, logId });
+
+		const mealLog = await db.MealLog.findOne({
+		  where: {
+			meal_id: logId,
+			user_id: userId
+		  }
+		});
+
+		if (!mealLog) {
+		  console.log('⚠️ MealLog not found:', logId);
+		  return res.status(404).json({ error: 'Meal log not found' });
+		}
+
+		await mealLog.destroy();
+
+		console.log('✅ MealLog deleted successfully:', logId);
+		res.status(200).json({ success: true });
+
+	  } catch (error) {
+		console.error('❌ Error deleting meal log:', error);
+		res.status(500).json({ error: error.message });
+	  }
+	};
+  ///////////////////////////////////////////////
   
   get = get(db.MealLog)
   

@@ -78,7 +78,30 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons name="list" size={24} color={color} />
         }}
       />
-    </Tabs>
+		<Tabs.Screen
+		  name="(tabs)/BeginnerGuide"
+		  options={{
+			href: null,           // ⛔ removes it from the tab bar
+			
+		  }}
+		/>
+		<Tabs.Screen
+		  name="(tabs)/IntermediateGuide"
+		  options={{
+			href: null,           // ⛔ removes it from the tab bar
+			
+		  }}
+		/>
+		<Tabs.Screen
+		  name="(tabs)/ExpertGuide"
+		  options={{
+			href: null,           // ⛔ removes it from the tab bar
+			
+		  }}
+		/>
+    
+	</Tabs>
+	
   );
 }
 

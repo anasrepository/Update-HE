@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FoodDBModal, MealLogDBModal } from '@/utils/dbFunctions';
 import FoodEntryBottomSheet, { FoodEntryBottomSheetRef } from './FoodEntryBottomSheet';
 
+
 // Helper functions to manage food entries (in a real app, these would interact with a backend)
 const mockFoodEntries = [
   {
@@ -173,7 +174,7 @@ const DailyFoodLog: React.FC<DailyFoodLogProps> = ({ date, refreshTrigger, onFoo
   const [totalProtein, setTotalProtein] = useState(0);
   const [totalCarbs, setTotalCarbs] = useState(0);
   const [totalFat, setTotalFat] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Monthly cache state
   const [monthlyCache, setMonthlyCache] = useState<{
@@ -304,8 +305,10 @@ const DailyFoodLog: React.FC<DailyFoodLogProps> = ({ date, refreshTrigger, onFoo
   }, [foodEntries]);
 
   // Delete meal log entry
+  
   const handleDeleteMealLog = async (mealId: string, foodName: string) => {
     try {
+	//console.log('loading food. from deletehandler');
       setIsLoading(true);
       
       // Show confirmation dialog
@@ -351,6 +354,46 @@ const DailyFoodLog: React.FC<DailyFoodLogProps> = ({ date, refreshTrigger, onFoo
       setIsLoading(false);
     }
   };
+  
+  // Delete meal log entry updated
+  /*
+  const handleDeleteMealLog = (mealId: string, foodName: string) => {
+  Alert.alert(
+    'Delete Food Entry',
+    `Are you sure you want to delete "${foodName}"?`,
+    [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            setIsLoading(true);
+
+            console.log('🗑️ Deleting meal log:', mealId);
+            await MealLogDBModal.delete(Number(mealId));
+
+            // 🔴 CRITICAL BRIDGE
+            setMonthlyCache(null);     // kill cache
+            onFoodAdded?.();           // notify DietScreen
+
+            console.log('✅ Meal log deleted');
+          } catch (err) {
+            console.error('❌ Delete failed:', err);
+            Alert.alert('Error', 'Failed to delete food entry.');
+          } finally {
+            setIsLoading(false);
+          }
+        },
+      },
+    ]
+  );
+};
+*/
+  //////////////////////////////////
 
   const renderFoodItem = ({ item }: { item: FoodEntry }) => (
     <Card style={styles.foodCard}>
@@ -370,11 +413,18 @@ const DailyFoodLog: React.FC<DailyFoodLogProps> = ({ date, refreshTrigger, onFoo
         </View>
         
         {/* Delete Button */}
+		
         <TouchableOpacity 
           style={styles.deleteButton}
-          onPress={() => handleDeleteMealLog(item.id, item.name)}
-          disabled={isLoading}
+		  
+          onPress={() => {
+		  console.log("Delete button pressed", item.id);
+		  handleDeleteMealLog(item.id, item.name)
+		  }}
+          //disabled={isLoading}
         >
+		
+			
           <MaterialIcons 
             name="delete-outline" 
             size={20} 

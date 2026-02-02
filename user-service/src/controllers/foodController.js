@@ -105,7 +105,28 @@ class FoodController {
       console.log("error:", error); 
       res.status(500).json({ error: error.message });
     }
+		
   }
+  /////////////////////////////////////////////////
+	deleteFood = async (req, res) => {
+		console.log("Delete Food HIT", req.params.food_id);
+        try {
+			
+            const food_id = req.params.food_id; 
+            const food = await db.Food.findByPk(food_id);
+
+            if (!food) {
+                return res.status(404).json({ error: "Food not found" });
+            }
+
+            await food.destroy();
+            res.status(200).json({ message: 'Food successfully deleted' }); 
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+	/////////////////////////////////////////////////
+
 }
 
 module.exports = FoodController;

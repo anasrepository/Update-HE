@@ -35,6 +35,7 @@ interface FoodInputModalProps {
   visible: boolean;
   onClose: () => void;
   onSave: (foodEntry: any) => void;
+  onDelete: (foodId: number) => void;
   mode?: 'food' | 'meal';
 }
 
@@ -42,6 +43,7 @@ const FoodInputModal: React.FC<FoodInputModalProps> = ({
   visible,
   onClose,
   onSave,
+  onDelete,
   mode = 'food'
 }) => {
   const [foodName, setFoodName] = useState('');
@@ -187,7 +189,7 @@ const FoodInputModal: React.FC<FoodInputModalProps> = ({
       // Add haptic feedback or toast notification here
       return;
     }
-
+	console.log("CreateFood HIT");
     // Create food entry object
     const foodEntry = {
       name: foodName,
@@ -203,6 +205,23 @@ const FoodInputModal: React.FC<FoodInputModalProps> = ({
     onSave(foodEntry);
     resetForm();
   };
+  
+  const handleDelete = async () => {
+  if (!selectedFoodId) return;
+
+  try {
+    console.log('🗑️ Deleting food:', selectedFoodId);
+    await FoodDBModal.delete(selectedFoodId);
+
+    // Notify parent (important)
+    onDelete?.(selectedFoodId);
+
+    resetForm();
+    onClose();
+  } catch (error) {
+    console.error('❌ Failed to delete food:', error);
+  }
+};
 
   const resetForm = () => {
     setFoodName('');
@@ -553,6 +572,13 @@ const FoodInputModal: React.FC<FoodInputModalProps> = ({
               <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
+			  
+				{selectedFromSearch && selectedFoodId && (
+					<TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+					<MaterialIcons name="delete" size={20} color="#FFFFFF" />
+					<Text style={styles.deleteButtonText}>Delete</Text>
+					</TouchableOpacity>
+				)}
               
               <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <LinearGradient

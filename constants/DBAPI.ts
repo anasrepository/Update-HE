@@ -4,7 +4,7 @@ import NetInfo from '@react-native-community/netinfo';
 //////////////////////////////////////////////////
 import { Platform } from "react-native";
 
-const DEV_HOST = "192.168.1.109"; // your machine IP
+const DEV_HOST = "192.168.1.104"; // your machine IP // updated at 24th Jan 2026
 const PORT = 3001;
 
 export function resolveBaseURL() {
@@ -21,12 +21,14 @@ export function resolveBaseURL() {
 /////////////////////////////////////////////////////
 export class APIConfiguration{
     private static currentURL: string = resolveBaseURL();//'http://10.0.2.2:3001' // fallback or emulator is using this
+	
     private static isInitialized: boolean = false;
     private static initPromise: Promise<string> | null = null;
     private static lastNetworkIP: string | null = null;
     private static networkListener: any = null;
     
     static async init(): Promise<string>{
+		console.log("Current URL", this.currentURL);
         // Return existing promise if already initializing
         if (this.initPromise) {
             return this.initPromise;
@@ -109,7 +111,8 @@ export class APIConfiguration{
             }
         });
     }
-    
+    /*
+
     static async getURL(): Promise<string> {
         // Wait for initialization if not done yet
         if (!this.isInitialized) {
@@ -117,6 +120,25 @@ export class APIConfiguration{
         }
         return this.currentURL;
     }
+	*/
+	
+	static async getURL(): Promise<string> {
+		  try {
+			if (!this.isInitialized) {
+			  await this.init();
+			}
+
+			if (!this.currentURL) {
+			  console.warn("⚠️ API URL missing, using fallback");
+			  return resolveBaseURL();
+			}
+
+			return this.currentURL;
+		  } catch (err) {
+			console.error("❌ API URL resolution failed, using fallback", err);
+			return resolveBaseURL();
+		  }
+}
     
     // Method to manually trigger a rescan (useful for debugging)
     static async forceRescan(): Promise<string> {
