@@ -230,7 +230,39 @@ class WorkoutLogController {
                         notes: exercise.notes || `Completed as part of ${workoutPlan.name}`
                     });
                 }
+				
+				// ===== ACHIEVEMENT: FIRST_WORKOUT =====
+
+				// Count distinct workout plans completed by this user
+				const completedPlanCount = await db.WorkoutLog.count({
+					where: { user_id: userId },
+					distinct: true,
+					col: 'workout_plan_id'
+				});
+
+				// Unlock achievement only on first completed plan
+				if (completedPlanCount === 1) {
+					const achievement = await db.Achievement.findOne({
+						where: {
+							user_id: userId,
+							type: 'FIRST_WORKOUT',
+							completed: false
+						}
+					});
+
+					if (achievement) {
+						await achievement.update({
+							progress: achievement.target_progress,
+							completed: true,
+							completed_at: new Date()
+						});
+					}
+				}
+			///////////////////////////////////////////////////
+				
             }
+			
+			
 
             // Update streak and calculate bonuses
             const streakInfo = await updateWorkoutStreak(user);

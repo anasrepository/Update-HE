@@ -28,7 +28,7 @@ class HealthProfileController {
       weight: healthData.weight,
       recorded_at: new Date()
     });
-    console.log("healthprofile created");
+    console.log("Health Profile created");// working
     res.status(201).json({
       'user-id': healthProfile.user_id,
       height: healthProfile.height,

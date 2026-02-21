@@ -62,7 +62,7 @@ class WorkoutPlanController {
                 difficulty_level, 
                 created_at: new Date()
             });
-
+			console.log("Workout Plan Created");
             if (exercises && Array.isArray(exercises)) {
                 for (const exercise of exercises) {
                     await db.WorkoutPlanExercise.create({
@@ -117,7 +117,7 @@ class WorkoutPlanController {
                 reps_targets, 
                 duration
             });
-
+			
             const updatedPlan = await db.WorkoutPlan.findByPk(planId, {
                 include: [{
                     model: db.Exercise, 

@@ -216,14 +216,21 @@ export default function StepByStepSignUp() {
             const userId = userResponse.data.id;
             
             // Set user ID in centralized auth state
-            await setUserId(userId);
+            //await setUserId(userId);// commenting temporarily
             
-            // Create health profile
-            await axios.post(`${apiUrl}/api/users/${userId}/health-profile`, {
-                height: getHeightInCm(),
-                weight: getWeightInKg()
-            });
-            
+            // Create health profile7
+			try{
+				const response = await axios.post(`${apiUrl}/api/users/${userId}/health-profile`, {
+					height: getHeightInCm(),
+					weight: getWeightInKg()
+				});
+				console.log("Health profile response ", response.status, response.data);
+            }catch(err:any){
+				console.log("Health profile axios error:", err.message);
+				throw err;
+			}
+			
+			console.log("Account created");// not working
             // Success - navigate to login
             Alert.alert(
                 "Account Created",

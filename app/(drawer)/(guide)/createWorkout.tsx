@@ -26,7 +26,7 @@ export default function CreateWorkout() {
   useEffect(() => {
     fetchExercises();
   }, []);
-
+console.log("Before workout insert"); // not working
   const fetchExercises = async () => {
     try {
       setLoading(true);
@@ -66,7 +66,7 @@ export default function CreateWorkout() {
       }
     }));
   };
-
+	console.log("Before workout insert");
   const createWorkout = async () => {
     if (!workoutName.trim()) {
       Alert.alert('Error', 'Please enter a workout name');
@@ -80,7 +80,7 @@ export default function CreateWorkout() {
 
     try {
       setCreating(true);
-      
+      //console.log("Before workout insert");
       // Prepare exercises data
       const exercisesData = Object.entries(selectedExercises).map(([exerciseId, params]) => ({
         exercise_id: parseInt(exerciseId),
@@ -96,7 +96,7 @@ export default function CreateWorkout() {
         reward: parseInt(reward) || 10,
         exercises: exercisesData
       };
-
+	console.log("Before workout insert");
       await WorkoutPlanDBModal.insert(workoutData);
       
       Alert.alert(

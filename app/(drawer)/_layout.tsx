@@ -146,6 +146,12 @@ const CustomDrawerContent = (props: any) => {
           onPress={() => handleNavigation('/(drawer)/(guide)/createWorkout')}
           active={activeItem === '/(drawer)/(guide)/createWorkout'}
         />
+		<DrawerItem
+          icon={<Ionicons name="add-circle-outline" size={22} color={getIconColor('/(drawer)/(guide)/createWorkout')} />}
+          label="Create Exercise"
+          onPress={() => handleNavigation('/(drawer)/(guide)/createExercise')}
+          active={activeItem === '/(drawer)/(guide)/createExercise'}
+        />
 
         {        /* 
         <DrawerItem

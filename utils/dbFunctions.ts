@@ -106,6 +106,39 @@ class ExerciseDBModal {
 const apiUrl = await API_URL();
 const rawResult = await axios.get(`${apiUrl}/api/exercises?exercise_id=${id}`);
     return Array.isArray(rawResult) && rawResult.length > 0 ? rawResult[0] : null;  }
+	
+static async insert(content: Partial<Exercise>): Promise<Exercise> {
+
+  const submit = {
+    name: content.name,
+    description: content.description,
+    type: content.type,
+    measurement_type: content.measurement_type,
+    difficulty_level: content.difficulty_level,
+    target_muscle_group: content.target_muscle_group
+  };
+
+  try {
+    const apiUrl = await API_URL();
+    const response = await axios.post(`${apiUrl}/api/exercises`, submit);
+
+    console.log('✅ Exercise inserted:', response.data);
+
+    return response.data;
+
+  } catch (error: any) {
+
+    console.error(
+      '❌ Exercise insert failed:',
+      error.response?.data || error.message
+    );
+
+    throw new Error(
+      error.response?.data?.error || 'Failed to create exercise'
+    );
+  }
+}	
+	
 }
 
 class GuideDBModal {
