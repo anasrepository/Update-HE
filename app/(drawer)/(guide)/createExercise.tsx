@@ -4,25 +4,52 @@ import { TextInput, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import ScreenTransition from '@/components/screenTransition';
+import { Dropdown } from 'react-native-paper-dropdown';
+import { Picker} from '@react-native-picker/picker';
 import { ExerciseDBModal } from '@/utils/dbFunctions';
+
 
 export default function CreateExercise() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState('');
   const [measurementType, setMeasurementType] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [muscleGroup, setMuscleGroup] = useState('');
   const [creating, setCreating] = useState(false);
+  const [type, setType] = useState('');
+  const [exerciseType, setExerciseType] = useState('');
+  const [showTypeDropDown, setShowTypeDropDown] = useState(false);  
 
   const resetForm = () => {
     setName('');
     setDescription('');
-    setType('');
+    setExerciseType('');
     setMeasurementType('');
     setDifficulty('');
     setMuscleGroup('');
   };
+  //console.log("Dropdown: ", Dropdown); // for testing
+  const exerciseTypeOptions = React.useMemo(() => [
+  {label:"Strength", value:"strength"},
+  {label:"Cardio", value: "cardio"}
+  ],[]);
+  
+  const measurementTypeOptions = React.useMemo(() => [
+  {label:"Reps", value:"reps"},
+  {label:"Duration", value: "duration"}
+  ],[]);
+  
+  const difficultyOptions = React.useMemo(() => [
+  {label:"Beginner", value:"beginner"},
+  {label:"Intermediate", value: "intermediate"},
+  {label:"Advanced", value: "advanced"}
+  ],[]);
+  
+  const muscleGroupOptions = React.useMemo(() => [
+  {label:"Chest", value:"chest"},
+  {label:"Legs", value: "legs"},
+  {label:"Full-body", value: "full-body"}
+  ],[]);
 
   const createExercise = async () => {
     if (!name.trim()) {
@@ -30,7 +57,7 @@ export default function CreateExercise() {
       return;
     }
 
-    if (!type.trim() || !measurementType.trim()) {
+    if (!exerciseType.trim() || !measurementType.trim()) {
       Alert.alert('Error', 'Type and measurement type are required');
       return;
     }
@@ -41,7 +68,7 @@ export default function CreateExercise() {
       const exerciseData = {
         name: name.trim(),
         description: description.trim() || null,
-        type: type.trim(),
+        type: exerciseType.trim(),
         measurement_type: measurementType.trim(),
         difficulty_level: difficulty.trim() || null,
         target_muscle_group: muscleGroup.trim() || null
@@ -101,56 +128,108 @@ export default function CreateExercise() {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.label}>Type *</Text>
-              <TextInput
-                value={type}
-                onChangeText={setType}
-                mode="outlined"
-                style={styles.input}
-                placeholder="strength / cardio"
-                outlineColor="#D68D54"
-                activeOutlineColor="#D68D54"
-              />
-            </View>
+			  <Text style={styles.label}>Exercise Type *</Text>
+			  <View style={{
+				borderWidth: 1,
+				borderColor: '#D68D54',
+				borderRadius: 6,
+				overflow: 'hidden',
+				backgroundColor: '#FFFFFF',
+				height: 56
+			  }}>
+				<Picker
+				  selectedValue={exerciseType}
+				  onValueChange={(itemValue) => setExerciseType(itemValue)}
+				  style={{height:56}}
+				>
+				  <Picker.Item label="Select exercise type..." value="" />
+				  {exerciseTypeOptions.map(opt => (
+					<Picker.Item
+					  key={opt.value}
+					  label={opt.label}
+					  value={opt.value}
+					/>
+				  ))}
+				</Picker>
+			  </View>
+			</View>
+			
+			<View style={styles.section}>
+			  <Text style={styles.label}>Measurement Type *</Text>
+			  <View style={{
+				borderWidth: 1,
+				borderColor: '#D68D54',
+				borderRadius: 6,
+				overflow: 'hidden',
+				backgroundColor: '#FFFFFF',
+				height: 56
+			  }}>
+				<Picker
+				  selectedValue={measurementType}
+				  onValueChange={(itemValue) => setMeasurementType(itemValue)}
+				  style={{height:56}}
+				>
+				  <Picker.Item label="Select measurement type..." value="" />
+				  {measurementTypeOptions.map(opt => (
+					<Picker.Item
+					  key={opt.value}
+					  label={opt.label}
+					  value={opt.value}
+					/>
+				  ))}
+				</Picker>
+			  </View>
+			</View>
+						
+			<View style={styles.section}>
+			  <Text style={styles.label}>Difficulty Level *</Text>
+			  <View style={{
+				borderWidth: 1,
+				borderColor: '#D68D54',
+				borderRadius: 6,
+				overflow: 'hidden',
+				backgroundColor: '#FFFFFF',
+				height: 56
+			  }}>
+				<Picker
+				  selectedValue={difficulty}
+				  onValueChange={(itemValue) => setDifficulty(itemValue)}
+				  style={{height:56}}
+				>
+				  <Picker.Item label="Select difficulty level..." value="" />
+				  {difficultyOptions.map(opt => (
+					<Picker.Item
+					  key={opt.value}
+					  label={opt.label}
+					  value={opt.value}
+					/>
+				  ))}
+				</Picker>
+			  </View>
+			</View>
+						
 
+			
             <View style={styles.section}>
-              <Text style={styles.label}>Measurement Type *</Text>
-              <TextInput
-                value={measurementType}
-                onChangeText={setMeasurementType}
-                mode="outlined"
-                style={styles.input}
-                placeholder="reps / duration"
-                outlineColor="#D68D54"
-                activeOutlineColor="#D68D54"
-              />
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.label}>Difficulty Level</Text>
-              <TextInput
-                value={difficulty}
-                onChangeText={setDifficulty}
-                mode="outlined"
-                style={styles.input}
-                placeholder="beginner / intermediate / advanced"
-                outlineColor="#D68D54"
-                activeOutlineColor="#D68D54"
-              />
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.label}>Target Muscle Group</Text>
-              <TextInput
-                value={muscleGroup}
-                onChangeText={setMuscleGroup}
-                mode="outlined"
-                style={styles.input}
-                placeholder="chest / legs / full-body"
-                outlineColor="#D68D54"
-                activeOutlineColor="#D68D54"
-              />
-            </View>
+			  <Text style={styles.label}>Target Muscle Group *</Text>
+			  <View style={styles.pickerContainer}>
+				<Picker
+				  selectedValue={muscleGroup}
+				  onValueChange={(itemValue) => setMuscleGroup(itemValue)}
+				  style={styles.picker}
+				  
+				>
+				  <Picker.Item label="Select muscle group..." value="" />
+				  {muscleGroupOptions.map(opt => (
+					<Picker.Item
+					  key={opt.value}
+					  label={opt.label}
+					  value={opt.value}
+					/>
+				  ))}
+				</Picker>
+			  </View>
+			</View>
 
             <TouchableOpacity
               style={[styles.button, creating && styles.buttonDisabled]}
@@ -223,4 +302,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
+  
+  pickerContainer: {
+	  borderWidth: 1,
+	  borderColor: '#D68D54',
+	  borderRadius: 6,
+	  backgroundColor: '#FFFFFF',
+	  height: 56,
+	  justifyContent: 'center',
+	  paddingHorizontal: 10,
+	},
+
+	picker: {
+	  height: 56,
+	  fontSize: 14,
+	  color: '#3A2A1F',
+	},
+	pickerItem: {
+	  fontSize: 14,
+	  height: 56,
+	  color: '#3A2A1F',
+	},
+  
 });
