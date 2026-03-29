@@ -31,7 +31,13 @@ export default function CreateExercise() {
   //console.log("Dropdown: ", Dropdown); // for testing
   const exerciseTypeOptions = React.useMemo(() => [
   {label:"Strength", value:"strength"},
-  {label:"Cardio", value: "cardio"}
+  {label:"Flexibility", value:"flexibility"},
+  {label:"Balance", value:"balance"},
+  {label:"Mobility", value:"mobility"},
+  {label:"Cardio", value: "cardio"},
+  {label:"Endurance", value:"endurance"},
+  {label:"Sport", value:"sport"},
+  {label:"Plyometric", value:"plyometric"}
   ],[]);
   
   const measurementTypeOptions = React.useMemo(() => [
@@ -48,6 +54,10 @@ export default function CreateExercise() {
   const muscleGroupOptions = React.useMemo(() => [
   {label:"Chest", value:"chest"},
   {label:"Legs", value: "legs"},
+  {label:"Arms", value: "arms"},
+  {label:"Shoulders", value: "shoulders"},
+  {label:"Upper Back", value: "upper-back"},
+  {label:"Lower Back", value: "lower-back"},
   {label:"Full-body", value: "full-body"}
   ],[]);
 
@@ -129,18 +139,11 @@ export default function CreateExercise() {
 
             <View style={styles.section}>
 			  <Text style={styles.label}>Exercise Type *</Text>
-			  <View style={{
-				borderWidth: 1,
-				borderColor: '#D68D54',
-				borderRadius: 6,
-				overflow: 'hidden',
-				backgroundColor: '#FFFFFF',
-				height: 56
-			  }}>
+			  <View style={styles.pickerContainer}>
 				<Picker
 				  selectedValue={exerciseType}
 				  onValueChange={(itemValue) => setExerciseType(itemValue)}
-				  style={{height:56}}
+				  style={styles.picker}
 				>
 				  <Picker.Item label="Select exercise type..." value="" />
 				  {exerciseTypeOptions.map(opt => (
@@ -156,18 +159,11 @@ export default function CreateExercise() {
 			
 			<View style={styles.section}>
 			  <Text style={styles.label}>Measurement Type *</Text>
-			  <View style={{
-				borderWidth: 1,
-				borderColor: '#D68D54',
-				borderRadius: 6,
-				overflow: 'hidden',
-				backgroundColor: '#FFFFFF',
-				height: 56
-			  }}>
+			  <View style={styles.pickerContainer}>
 				<Picker
 				  selectedValue={measurementType}
 				  onValueChange={(itemValue) => setMeasurementType(itemValue)}
-				  style={{height:56}}
+				  style={styles.picker}
 				>
 				  <Picker.Item label="Select measurement type..." value="" />
 				  {measurementTypeOptions.map(opt => (
@@ -183,18 +179,12 @@ export default function CreateExercise() {
 						
 			<View style={styles.section}>
 			  <Text style={styles.label}>Difficulty Level *</Text>
-			  <View style={{
-				borderWidth: 1,
-				borderColor: '#D68D54',
-				borderRadius: 6,
-				overflow: 'hidden',
-				backgroundColor: '#FFFFFF',
-				height: 56
-			  }}>
+			  <View style={styles.pickerContainer}>
+			  
 				<Picker
 				  selectedValue={difficulty}
 				  onValueChange={(itemValue) => setDifficulty(itemValue)}
-				  style={{height:56}}
+				  style={styles.picker}
 				>
 				  <Picker.Item label="Select difficulty level..." value="" />
 				  {difficultyOptions.map(opt => (

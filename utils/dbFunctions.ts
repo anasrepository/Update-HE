@@ -1,4 +1,4 @@
-import {Achievement, Exercise, Food, Goal, Guide, MealLog, WorkoutPlan, WorkoutPlanExercise} from "./table.types";
+  import {Achievement, Exercise, Food, Goal, Guide, MealLog, WorkoutPlan, WorkoutPlanExercise} from "./table.types";
 import axios from "axios";
 import { API_URL } from "@/constants/DBAPI";
 import { getUserId } from "./authState";

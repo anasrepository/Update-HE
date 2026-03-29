@@ -390,7 +390,7 @@ export default function GuideContent() {
             {renderIndicator()}
             
             {/* Floating overlay button with safe area consideration - only show on last exercise */}
-            {currentPage === exercises.length - 1 && (
+           
                 <View style={[styles.overlayButtonContainer, { bottom: Math.max(insets.bottom + 20, 30) }]}>
                     <Button
                         mode="contained"
@@ -403,7 +403,7 @@ export default function GuideContent() {
                         Finish
                     </Button>
                 </View>
-            )}
+           
             
             <WorkoutCompletionModal
                 visible={completionModal.visible}
