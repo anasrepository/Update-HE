@@ -66,6 +66,35 @@ export default function CreateWorkout() {
       }
     }));
   };
+  /////////////////////////////////////////////////////
+  const calculateReward = (exercisesData: any[]) => {
+	  let totalReward = 0;
+
+	  exercisesData.forEach((exercise) => {
+		const sets = exercise.sets || 0;
+		const reps = exercise.reps_targets || 0;
+		const duration = exercise.duration || 0;
+		//const difficuly = exercise.difficuly_level || "beginner";
+
+		// Example reward logic
+		// Reps-based reward
+		if (reps > 0) {
+		  totalReward += sets * reps;
+		}
+
+		// Duration-based reward
+		if (duration > 0) {
+		  totalReward += Math.floor(duration / 10);
+		}
+		
+		//console.log("Difficulty Level: ", difficulty);
+	  });
+
+	  return totalReward;
+	};
+  /////////////////////////////////////////////////////
+  
+  
 	//console.log("Before workout insert");// working
   const createWorkout = async () => {
     if (!workoutName.trim()) {
@@ -87,13 +116,16 @@ export default function CreateWorkout() {
         sets: parseInt(params.sets) || 3,
         reps_targets: parseInt(params.reps) || 10,
         duration: parseInt(params.duration) || 60
+		//difficulty_level: selectedExercises?.difficulty_level || "beginner"
       }));
-
+		const totalReward = calculateReward(exercisesData);
+		console.log("Total Reward: ", totalReward)
+		//console.log("Reward: " , reward);
       const workoutData = {
         name: workoutName.trim(),
         description: workoutDescription.trim() || undefined,
         difficulty_level: difficulty,
-        reward: parseInt(reward) || 10,
+        reward: parseInt(totalReward) || 10,
         exercises: exercisesData
       };
 	//console.log("Before workout insert");// working
@@ -109,7 +141,7 @@ export default function CreateWorkout() {
               setWorkoutName('');
               setWorkoutDescription('');
               setDifficulty('beginner');
-              setReward('10');
+              setReward(reward);
               setSelectedExercises({});
             }
           }

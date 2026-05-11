@@ -50,16 +50,17 @@ class WorkoutPlanController {
 
     createWorkoutPlan = async (req, res) => {
         try {
-            const { name, description, difficulty_level, exercises } = req.body;
-
+            const { name, description, difficulty_level, reward, exercises } = req.body;
+			
+			console.log("createWorkoutPlan in controller: reward points: ", reward);
             if (!name) {
                 return res.status(400).json({ error: 'Plan name is required' });
             }
-
             const plan = await db.WorkoutPlan.create({
                 name, 
                 description, 
                 difficulty_level, 
+				reward: reward !== undefined ? Number(reward) : 10,
                 created_at: new Date()
             });
 			console.log("Workout Plan Created");
@@ -74,7 +75,6 @@ class WorkoutPlanController {
                     });
                 }
             }
-
             const createdPlan = await db.WorkoutPlan.findByPk(plan.plan_id, {
                 include: [{
                     model: db.Exercise,

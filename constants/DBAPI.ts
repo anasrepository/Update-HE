@@ -4,7 +4,9 @@ import NetInfo from '@react-native-community/netinfo';
 //////////////////////////////////////////////////
 import { Platform } from "react-native";
 
-const DEV_HOST = "192.168.1.104"; // your machine IP // updated at 24th Jan 2026
+//const DEV_HOST = "192.168.1.104"; // your machine IP // updated at 24th Jan 2026
+
+const DEV_HOST = "localhost"; // updated at 19th April 2026
 const PORT = 3001;
 
 export function resolveBaseURL() {

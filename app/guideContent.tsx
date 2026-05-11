@@ -98,7 +98,9 @@ export default function GuideContent() {
                         console.log("Exercises loaded with metadata:", exercisesWithMetadata.length);
                         
                         if (exercisesWithMetadata.length > 0) {
-                            console.log("Sample exercise with metadata:", exercisesWithMetadata[0]);
+							// display all exercises in a guide
+							// console.log("Sample exercise with metadata:", exercisesWithMetadata[0]);
+                            console.log("Sample exercise(s) with metadata:", exercisesWithMetadata);
                             // Set workout plan (you might want to fetch this separately if needed)
                             setWorkoutPlan({ plan_id: workoutId } as WorkoutPlan);
                         } else {

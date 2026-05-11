@@ -299,9 +299,12 @@ class WorkoutPlanDBModal {
 
   static async insert(content: Partial<WorkoutPlan>): Promise<void>{
      
+	 console.log("workoutDBModal: Before insert in DB, reward: " , content.reward);
+	 
     const apiUrl = await API_URL();
-    await axios.post(`${apiUrl}/api/workout-plans`,content).then(res => console.log('Inserted successfully: ', res.data))
-                                                       .catch(err => console.log('Error inserting', err));
+    await axios.post(`${apiUrl}/api/workout-plans`,content).then(res => 
+	console.log('Inserted successfully: ', res.data))
+	.catch(err => console.log('Error inserting', err));
   }
 }
 
