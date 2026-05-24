@@ -170,7 +170,7 @@ export default function CreateWorkout() {
 
             {/* Workout Name */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Workout Name</Text>
+              <Text style={styles.sectionTitle}>Workout Name *</Text>
               <TextInput
                 value={workoutName}
                 onChangeText={setWorkoutName}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Dimensions, Text, View, ScrollView, TouchableOpacity, Modal, Image, AppState } from 'react-native';
 import { Searchbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useFocusEffect } from 'expo-router';
+import { router, useNavigation, useFocusEffect } from 'expo-router';
 
 import DropdownMenu from '@/components/DropdownMenu';
 import SearchBarComponent from '@/components/SearchBarComponent';

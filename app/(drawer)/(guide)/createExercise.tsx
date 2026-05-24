@@ -7,6 +7,9 @@ import ScreenTransition from '@/components/screenTransition';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { Picker} from '@react-native-picker/picker';
 import { ExerciseDBModal } from '@/utils/dbFunctions';
+import { ExerciseCreationModal } from '@/components/ExerciseCreationModal';
+import { completeWorkoutPlan } from '@/utils/workoutService';
+import { router, useLocalSearchParams } from "expo-router";
 
 
 export default function CreateExercise() {
@@ -19,6 +22,23 @@ export default function CreateExercise() {
   const [type, setType] = useState('');
   const [exerciseType, setExerciseType] = useState('');
   const [showTypeDropDown, setShowTypeDropDown] = useState(false);  
+  const [creationModal, setCreationModal] = useState<{
+        visible: boolean;
+        exerciseName: string;
+        description: string;
+        exercise_type: string;
+        measurement_type: string;
+        target_muscle_group: string;
+        difficulty_level: string;
+    }>({
+        visible: false,
+        exerciseName: '',
+		description: '',
+        exercise_type: '',
+        measurement_type: '',
+        target_muscle_group: '',
+        difficulty_level: ''
+    });
 
   const resetForm = () => {
     setName('');
@@ -84,7 +104,19 @@ export default function CreateExercise() {
         target_muscle_group: muscleGroup.trim() || null
       };
 
-      await ExerciseDBModal.insert(exerciseData);
+      const result = await ExerciseDBModal.insert(exerciseData);
+	  //console.log("Exercise created", result);
+	  
+	  // Show completion modal
+		setCreationModal({
+			visible: true,
+			exerciseName: result.name,
+			description: result.description,
+			exercise_type: result.type,
+			measurement_type: result.measurement_type,
+			target_muscle_group: result.target_muscle_group,
+			difficulty_level: result.difficulty_level
+		});
 
       Alert.alert(
         'Success',
@@ -99,6 +131,21 @@ export default function CreateExercise() {
       setCreating(false);
     }
   };
+  
+      // Close completion modal and navigate back
+    const closeCreationModal = () => {
+        setCreationModal({
+            visible: false,
+            exerciseName: '',
+            description: '',
+			exercise_type: '',
+			measurement_type: '',
+			target_muscle_group: '',
+			difficulty_level: ''
+        });
+		// navigate to home screen after successful creation of exercise
+        router.push('/(drawer)/(tabs)');
+    };
 
   return (
     <ScreenTransition type="zoom">
@@ -224,7 +271,7 @@ export default function CreateExercise() {
             <TouchableOpacity
               style={[styles.button, creating && styles.buttonDisabled]}
               onPress={createExercise}
-              disabled={creating}
+              
             >
               <Ionicons name="add-circle" size={22} color="#FFFFFF" />
               <Text style={styles.buttonText}>
@@ -233,6 +280,19 @@ export default function CreateExercise() {
             </TouchableOpacity>
 
           </ScrollView>
+		  
+		  <ExerciseCreationModal
+                visible={creationModal.visible}
+                onClose={closeCreationModal}
+                exerciseName={creationModal.exerciseName}
+                description={creationModal.description}
+                exercise_type={creationModal.exercise_type}
+                measurement_type={creationModal.measurement_type}
+                target_muscle_group={creationModal.target_muscle_group}
+                difficulty_level={creationModal.difficulty_level}
+
+            />
+		  
         </SafeAreaView>
       </PaperProvider>
     </ScreenTransition>
