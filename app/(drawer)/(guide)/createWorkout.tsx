@@ -6,6 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import ScreenTransition from '@/components/screenTransition';
 import { ExerciseDBModal, WorkoutPlanDBModal } from '@/utils/dbFunctions';
 import { Exercise } from '@/utils/table.types';
+import { WorkoutCreationModal } from '@/components/WorkoutCreationModal';
+import { completeWorkoutPlan } from '@/utils/workoutService';
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function CreateWorkout() {
   const [workoutName, setWorkoutName] = useState('');
@@ -22,6 +25,31 @@ export default function CreateWorkout() {
     { value: 'intermediate', label: 'Intermediate', color: '#FF9800', icon: 'fitness', coins: 20 },
     { value: 'advanced', label: 'Advanced', color: '#F44336', icon: 'flame', coins: 30 }
   ];
+  
+  const [creationModal, setCreationModal] = useState<{
+        visible: boolean;
+        name: string;
+		description: string,
+		difficulty_level: string,
+		w_reward: number,
+		exercises: any[]
+    }>({
+        visible: false,
+        name: '',
+		description: '',
+		difficulty_level: '',
+		w_reward: 0,
+		exercises: []
+    });
+
+  const resetForm = () => {
+    setWorkoutName('');
+    setDescription('');
+    setExerciseType('');
+    setMeasurementType('');
+    setDifficulty('');
+    setMuscleGroup('');
+  };
 
   useEffect(() => {
     fetchExercises();
@@ -129,7 +157,19 @@ export default function CreateWorkout() {
         exercises: exercisesData
       };
 	//console.log("Before workout insert");// working
-      await WorkoutPlanDBModal.insert(workoutData);
+      const result = await WorkoutPlanDBModal.insert(workoutData);
+	  
+	  
+	  console.log("Result Exercises: ", result.Exercises);
+	  // Show completion modal
+		setCreationModal({
+			visible: true,
+			name: result.name,
+			description: result.description.trim() || undefined,
+			difficulty_level: result.difficulty_level,
+			w_reward: result.reward || 10,
+			exercises: result.Exercises
+		});
       
       Alert.alert(
         'Success', 
@@ -155,6 +195,19 @@ export default function CreateWorkout() {
       setCreating(false);
     }
   };
+  // Close completion modal and navigate back
+    const closeCreationModal = () => {
+        setCreationModal({
+            visible: false,
+			name: '',
+			description: '',
+			difficulty_level: '',
+			w_reward: 0,
+			exercises: []
+        });
+		// navigate to home screen after successful creation of workout
+        router.push('/(drawer)/(tabs)');
+    };
 
   return (
     <ScreenTransition type='zoom'>
@@ -363,6 +416,16 @@ export default function CreateWorkout() {
             </TouchableOpacity>
 
           </ScrollView>
+		  <WorkoutCreationModal
+                visible={creationModal.visible}
+                onClose={closeCreationModal}
+                name={creationModal.name}
+                description={creationModal.description}
+                difficulty_level={creationModal.difficulty_level}
+                w_reward={creationModal.w_reward}
+                exercises={creationModal.exercises}
+                
+            />
         </SafeAreaView>
       </PaperProvider>
     </ScreenTransition>

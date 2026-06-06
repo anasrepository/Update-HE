@@ -296,16 +296,44 @@ class WorkoutPlanDBModal {
 
     return Array.isArray(rawResult) && rawResult.length > 0 ? rawResult : []
   }
-
+  /*
   static async insert(content: Partial<WorkoutPlan>): Promise<void>{
      
 	 console.log("workoutDBModal: Before insert in DB, reward: " , content.reward);
 	 
     const apiUrl = await API_URL();
-    await axios.post(`${apiUrl}/api/workout-plans`,content).then(res => 
+    const res = await axios.post(`${apiUrl}/api/workout-plans`,content).then(res => 
 	console.log('Inserted successfully: ', res.data))
 	.catch(err => console.log('Error inserting', err));
+	return res.data.data;
   }
+  */
+  
+  //////////////////////////////////////
+  static async insert(content: Partial<WorkoutPlan>): Promise<any> {
+  try {
+    console.log(
+      "workoutDBModal: Before insert in DB, reward:",
+      content.reward
+    );
+
+    const apiUrl = await API_URL();
+
+    const response = await axios.post(
+      `${apiUrl}/api/workout-plans`,
+      content
+    );
+
+    console.log("Inserted successfully:", response.data);
+
+    return response.data;
+
+  } catch (err) {
+    console.log("Error inserting", err);
+    throw err;
+  }
+}
+  //////////////////////////////////////
 }
 
 class GoalDBModal {
