@@ -3,7 +3,8 @@ import { Alert } from 'react-native';
 import FoodInputModal from './FoodInputModal';
 import { FoodDBModal, MealLogDBModal } from '@/utils/dbFunctions';
 import { getCurrentUser } from '@/utils/authState';
-
+import { FoodCreationModal } from '@/components/FoodCreationModal';
+ 
 export interface FoodEntryBottomSheetRef {
   show: () => void;
   hide: () => void;
@@ -17,6 +18,16 @@ interface FoodEntryBottomSheetProps {
 const FoodEntryBottomSheet = forwardRef<FoodEntryBottomSheetRef, FoodEntryBottomSheetProps>(
   ({ onFoodAdded, onMealAdded }, ref) => {
     const [isVisible, setIsVisible] = useState(false);
+	
+	const [creationModal, setCreationModal] = useState<{
+        visible: boolean;
+        name: string;
+		protein: number;
+    }>({
+        visible: false,
+        name: '',
+		protein: 0
+    });
 
     console.log('🍽️ FoodEntryBottomSheet: Rendered, visible:', isVisible);
 
@@ -65,6 +76,14 @@ const FoodEntryBottomSheet = forwardRef<FoodEntryBottomSheetRef, FoodEntryBottom
 
           foodId = createdFood.food_id;
           console.log('✅ FoodEntryBottomSheet: Food inserted successfully with ID:', foodId);
+		  console.log('✅ FoodEntryBottomSheet: Food inserted successfully:', createdFood);
+		  // Show completion modal
+			setCreationModal({
+				visible: true,
+				name: createdFood.name,
+				protein: createdFood.protein				
+			});
+		  
         }
 
         // Create meal log entry using the food ID
@@ -106,15 +125,32 @@ const FoodEntryBottomSheet = forwardRef<FoodEntryBottomSheetRef, FoodEntryBottom
       }
     };
 
-    // Render FoodInputModal directly since it has its own modal implementation
-    return (
-      <FoodInputModal
-        visible={isVisible}
-        onClose={handleClose}
-        onSave={handleSave}
-        mode="food"
-      />
-    );
+		const closeCreationModal = () => {
+	  setCreationModal({
+		visible: false,
+		name: '',
+		protein: 0,
+	  });
+	};
+
+	// Render FoodInputModal directly since it has its own modal implementation
+	return (
+	  <>
+		<FoodCreationModal
+		  visible={creationModal.visible}
+		  onClose={closeCreationModal}
+		  name={creationModal.name}
+		  protein={creationModal.protein}
+		/>
+
+		<FoodInputModal
+		  visible={isVisible}
+		  onClose={handleClose}
+		  onSave={handleSave}
+		  mode="food"
+		/>
+	  </>
+	);
   }
 );
 

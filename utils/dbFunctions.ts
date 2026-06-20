@@ -368,7 +368,7 @@ class GoalDBModal {
     const apiUrl = await API_URL();
     await axios.put(`${apiUrl}/api/users/${userId}/goals/${id}`, submit).then(res => console.log('Updated successfully: ', res.data))
   }
-
+/*
   static async insert(content: Partial<Goal>): Promise<void>{
     const userId = await getUserId();
     if (!userId) {
@@ -379,6 +379,35 @@ class GoalDBModal {
     await axios.post(`${apiUrl}/api/users/${userId}/goals`,content).then(res => console.log('Inserted successfully: ', res.data))
                                                             .catch(err => console.log('Error inserting', err));
   }
+  */
+ /////////////////////////////////////////////////////////
+ static async insert(content: Partial<Goal>): Promise<Goal> {
+  const userId = await getUserId();
+
+  if (!userId) {
+    console.error('❌ GoalDBModal: No user ID available for insert');
+    throw new Error('No user ID available');
+  }
+
+  const apiUrl = await API_URL();
+
+  console.log('GoalDBModal: Before insert in DB:', content);
+
+  try {
+    const response = await axios.post(
+      `${apiUrl}/api/users/${userId}/goals`,
+      content
+    );
+
+    console.log('Goal inserted successfully:', response.data);
+
+    return response.data;
+  } catch (err: any) {
+    console.log('Error inserting goal:', err.response?.data || err.message);
+    throw err;
+  }
+}
+ /////////////////////////////////////////////////////////
 }
 export { AchievementDBModal, ExerciseDBModal, GuideDBModal, WorkoutPlanExerciseDBModal, FoodDBModal, dropall, WorkoutPlanDBModal, GoalDBModal, MealLogDBModal };
 

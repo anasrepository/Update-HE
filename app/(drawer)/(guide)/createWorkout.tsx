@@ -29,9 +29,9 @@ export default function CreateWorkout() {
   const [creationModal, setCreationModal] = useState<{
         visible: boolean;
         name: string;
-		description: string,
-		difficulty_level: string,
-		w_reward: number,
+		description: string;
+		difficulty_level: string;
+		w_reward: number;
 		exercises: any[]
     }>({
         visible: false,

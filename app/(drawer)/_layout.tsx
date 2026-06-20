@@ -113,6 +113,8 @@ const CustomDrawerContent = (props: any) => {
           <Text style={styles.sectionTitle}>Fitness Guides</Text>
           <View style={styles.divider} />
         </View>
+		
+		
 
         <DrawerItem
           icon={<FontAwesome5 name="baby" size={18} color={getIconColor('/(drawer)/(tabs)/BeginnerGuide')} />}
@@ -151,6 +153,12 @@ const CustomDrawerContent = (props: any) => {
           label="Create Exercise"
           onPress={() => handleNavigation('/(drawer)/(guide)/createExercise')}
           active={activeItem === '/(drawer)/(guide)/createExercise'}
+        />
+		<DrawerItem
+          icon={<Ionicons name="add-circle-outline" size={22} color={getIconColor('/(drawer)/(guide)/createGoal')} />}
+          label="Create Goal"
+          onPress={() => handleNavigation('/(drawer)/(guide)/createGoal')}
+          active={activeItem === '/(drawer)/(guide)/createGoal'}
         />
 
         {        /* 
