@@ -6,21 +6,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 interface GoalCreationModalProps {
   visible: boolean;
   onClose: () => void;
-  name: string;
-	description: string;
-	difficulty_level: string;
-	w_reward: number;
-	exercises: any[];
+  goal_type: string;
+	target_value: string;
+	timeline: string;
+	target_date: string;
+
 }
 
 export const GoalCreationModal: React.FC<GoalCreationModalProps> = ({
   visible,
   onClose,
-  name,
-	description,
-	difficulty_level,
-	w_reward,
-	exercises
+  goal_type,
+	target_value,
+	timeline,
+	target_date
+
 }) => {
   const scaleAnim = React.useRef(new Animated.Value(0)).current;
 
@@ -64,46 +64,12 @@ export const GoalCreationModal: React.FC<GoalCreationModalProps> = ({
             </View>
             
             <Text style={styles.congratsText}>Success!</Text>
-            <Text style={styles.workoutText}>You Created Goal: {name}</Text>			
+            <Text style={styles.workoutText}>You Created Goal: {goal_type}</Text>			
 			
-            <Text style={styles.workoutText}>Description: {description}</Text>
+            <Text style={styles.workoutText}>Target_date: {target_date}</Text>
 			
-			<Text style={styles.workoutText}>Difficulty Level: {difficulty_level}</Text>
+			<Text style={styles.workoutText}>Target Value: {target_value}</Text>
 			
-			<Text style={styles.workoutText}>Total Reward Points: {w_reward}</Text>
-			
-			
-			<Text style={styles.workoutText}>Exercises Data:</Text>
-
-{exercises && exercises.length > 0 ? (
-  exercises.map((exercise, index) => (
-    <View key={index} style={styles.exerciseBox}>
-      <Text style={styles.exerciseText}>
-        {index + 1}. {exercise.name || `Exercise ID: ${exercise.exercise_id}`}
-      </Text>
-
-      {exercise.description && (
-        <Text style={styles.exerciseDetail}>
-          Description: {exercise.description}
-        </Text>
-      )}
-
-      {exercise.type && (
-        <Text style={styles.exerciseDetail}>
-          Type: {exercise.type}
-        </Text>
-      )}
-
-      {exercise.difficulty_level && (
-        <Text style={styles.exerciseDetail}>
-          Difficulty: {exercise.difficulty_level}
-        </Text>
-      )}
-    </View>
-  ))
-) : (
-  <Text style={styles.exerciseDetail}>No exercise data available.</Text>
-)}
 			
              
             <TouchableOpacity 

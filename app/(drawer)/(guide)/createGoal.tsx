@@ -15,6 +15,7 @@ import ScreenTransition from '@/components/screenTransition';
 import { GoalDBModal } from '@/utils/dbFunctions';
 import { getCurrentUser } from '@/utils/authState';
 import { router } from 'expo-router';
+import { GoalCreationModal } from '@/components/GoalCreationModal';
 
 export default function CreateGoal() {
   const [goalType, setGoalType] = useState('');
@@ -32,6 +33,21 @@ export default function CreateGoal() {
     ],
     []
   );
+  
+  const [creationModal, setCreationModal] = useState<{
+        visible: boolean;
+		goal_type: string;
+		target_value: string;
+		timeline: string;
+		target_date: string;
+    }>({
+        visible: false,
+		  goal_type: '',
+			target_value: '',
+			timeline: '',
+			target_date: ''
+
+    });
 
   const resetForm = () => {
     setGoalType('');
@@ -90,6 +106,13 @@ export default function CreateGoal() {
       const result = await GoalDBModal.insert(goalData);
 
       console.log('Goal created result:', result);
+	  // Show completion modal
+			setCreationModal({
+				visible: true,
+				goal_type: result.type,
+				target_value: result.target_value,
+				target_date: result.target_date				
+			});
 
       Alert.alert(
         'Success',
@@ -111,6 +134,17 @@ export default function CreateGoal() {
       setCreating(false);
     }
   };
+  
+  const closeCreationModal = () => {
+	  setCreationModal({
+		visible: false,
+		  goal_type: '',
+			target_value: '',
+			target_date: ''
+	  });
+	  // navigate to home screen after successful creation of exercise
+        router.push('/(drawer)/(tabs)');
+	};
 
   return (
     <ScreenTransition type="zoom">
@@ -187,7 +221,16 @@ export default function CreateGoal() {
                 activeOutlineColor="#D68D54"
                 textColor="#000000"
               />
+			  
             </View>
+			
+			<GoalCreationModal
+		  visible={creationModal.visible}
+		  onClose={closeCreationModal}
+		  target_value={creationModal.target_value}
+		  goal_type={creationModal.goal_type}
+		  target_date={creationModal.target_date}
+		/>
 
             <TouchableOpacity
               style={[styles.button, creating && styles.buttonDisabled]}
