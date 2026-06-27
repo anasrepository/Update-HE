@@ -22,6 +22,12 @@ export const GoalCreationModal: React.FC<GoalCreationModalProps> = ({
 	target_date
 
 }) => {
+
+  const formatDate = (dateValue: string) => {
+    if (!dateValue) return '';
+    return new Date(dateValue).toISOString().split('T')[0];
+  };
+  
   const scaleAnim = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
@@ -66,7 +72,7 @@ export const GoalCreationModal: React.FC<GoalCreationModalProps> = ({
             <Text style={styles.congratsText}>Success!</Text>
             <Text style={styles.workoutText}>You Created Goal: {goal_type}</Text>			
 			
-            <Text style={styles.workoutText}>Target_date: {target_date}</Text>
+            <Text style={styles.workoutText}>Target_date: {formatDate(target_date)}</Text>
 			
 			<Text style={styles.workoutText}>Target Value: {target_value}</Text>
 			
