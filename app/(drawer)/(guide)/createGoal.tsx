@@ -19,6 +19,7 @@ import { getCurrentUser } from '@/utils/authState';
 import { router } from 'expo-router';
 import { GoalCreationModal } from '@/components/GoalCreationModal';
 
+
 export default function CreateGoal() {
   const [goalType, setGoalType] = useState('');
   const [targetValue, setTargetValue] = useState('');
@@ -87,26 +88,34 @@ export default function CreateGoal() {
       setTimeline(`${year}-${month}-${day}`);
     }
   };
+  
+  const showAlert = (title: string, message: string) => {
+  if (Platform.OS === 'web') {
+    window.alert(`${title}\n\n${message}`);
+  } else {
+    Alert.alert(title, message);
+  }
+};
 
 
   const createGoal = async () => {
     if (!goalType.trim()) {
-      Alert.alert('Error', 'Please select goal type');
+      showAlert('Error', 'Please select goal type');
       return;
     }
 
     if (!targetValue.trim()) {
-      Alert.alert('Error', 'Please enter target value');
+      showAlert('Error', 'Please enter target value');
       return;
     }
 
     if (isNaN(Number(targetValue)) || Number(targetValue) < 0) {
-      Alert.alert('Error', 'Target value must be a valid positive number');
+      showAlert('Error', 'Target value must be a valid positive number');
       return;
     }
 
     if (!timeline.trim()) {
-      Alert.alert('Error', 'Please select a target date');
+      showAlert('Error', 'Please select a target date');
       return;
     }
 
@@ -115,7 +124,7 @@ export default function CreateGoal() {
       const user = await getCurrentUser();
 
       if (!user || !user.id) {
-        Alert.alert('Error', 'No authenticated user found');
+        showAlert('Error', 'No authenticated user found');
         return;
       }
 
