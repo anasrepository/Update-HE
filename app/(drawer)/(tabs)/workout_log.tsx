@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Alert, TouchableOpacity, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Alert,
+  RefreshControl,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getCurrentUser } from '../../../utils/authState';
 import { API_URL } from '../../../constants/DBAPI';
@@ -7,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Exercise {
   exercise_id: number;
-  name: string;
+  name?: string;
   description?: string;
   muscle_group?: string;
   equipment?: string;
@@ -15,23 +22,23 @@ interface Exercise {
 
 interface WorkoutPlan {
   plan_id: number;
-  name: string;
+  name?: string;
   description?: string;
   difficulty?: string;
 }
 
 interface WorkoutLogEntry {
-  log_id: number;
-  user_id: number;
-  exercise_id: number;
-  workout_plan_id: number | null;
-  completed_at: string;
-  sets_completed: number | null;
-  reps_completed: number | null;
-  duration: number | null;
-  notes: string | null;
-  Exercise: Exercise;
-  WorkoutPlan?: WorkoutPlan;
+  log_id?: number;
+  user_id?: number;
+  exercise_id?: number | null;
+  workout_plan_id?: number | null;
+  completed_at?: string;
+  sets_completed?: number | null;
+  reps_completed?: number | null;
+  duration?: number | null;
+  notes?: string | null;
+  Exercise?: Exercise | null;
+  WorkoutPlan?: WorkoutPlan | null;
 }
 
 export default function WorkoutLogScreen() {
@@ -42,6 +49,7 @@ export default function WorkoutLogScreen() {
   const fetchWorkoutLogs = async () => {
     try {
       const user = await getCurrentUser();
+
       if (!user || !user.id) {
         Alert.alert('Error', 'Please log in to view your workout history');
         return;
@@ -49,29 +57,41 @@ export default function WorkoutLogScreen() {
 
       const apiUrl = await API_URL();
       const token = await AsyncStorage.getItem('authToken');
-      
+
       const response = await fetch(`${apiUrl}/api/users/${user.id}/workout-logs`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
-        }
+        },
       });
-      
+
       console.log('Response status:', response.status);
       console.log('Response URL:', response.url);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error response:', errorText);
         throw new Error(`Failed to fetch workout logs: ${response.status}`);
       }
 
-      const logs = await response.json();
-      console.log('Fetched workout logs:', logs);
+      const result = await response.json();
+
+      console.log('Fetched workout logs:', result);
+
+      const logs = Array.isArray(result)
+        ? result
+        : Array.isArray(result?.data)
+          ? result.data
+          : Array.isArray(result?.workoutLogs)
+            ? result.workoutLogs
+            : [];
+
       console.log('Number of logs:', logs.length);
+
       if (logs.length > 0) {
         console.log('First log item:', JSON.stringify(logs[0], null, 2));
       }
+
       setWorkoutLogs(logs);
     } catch (error) {
       console.error('Error fetching workout logs:', error);
@@ -91,79 +111,103 @@ export default function WorkoutLogScreen() {
     fetchWorkoutLogs();
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'No date';
+
     const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
-  const formatDuration = (duration: number | null) => {
-    if (!duration) return 'N/A';
-    
+  const formatDuration = (duration?: number | null) => {
+    if (duration === null || duration === undefined || duration <= 0) {
+      return 'N/A';
+    }
+
     const hours = Math.floor(duration / 3600);
     const minutes = Math.floor((duration % 3600) / 60);
     const seconds = duration % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m ${seconds}s`;
-    } else if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    } else {
-      return `${seconds}s`;
     }
+
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    }
+
+    return `${seconds}s`;
   };
 
-  const renderWorkoutLogItem = ({ item }: { item: WorkoutLogEntry }) => (
-    <View style={styles.logItem}>
-      {item.WorkoutPlan && (
-        <View style={styles.workoutPlanBadge}>
-          <Ionicons name="barbell" size={14} color="#FFFFFF" />
-          <Text style={styles.workoutPlanName}>{item.WorkoutPlan.name}</Text>
+  const renderWorkoutLogItem = ({ item }: { item: WorkoutLogEntry }) => {
+    if (!item) return null;
+
+    const workoutPlanName = item?.WorkoutPlan?.name || '';
+
+    const exerciseName =
+      item?.Exercise?.name ||
+      item?.WorkoutPlan?.name ||
+      'Unnamed Workout';
+
+    return (
+      <View style={styles.logItem}>
+        {workoutPlanName !== '' && (
+          <View style={styles.workoutPlanBadge}>
+            <Ionicons name="barbell" size={14} color="#FFFFFF" />
+            <Text style={styles.workoutPlanName}>{workoutPlanName}</Text>
+          </View>
+        )}
+
+        <View style={styles.logHeader}>
+          <Text style={styles.exerciseName}>{exerciseName}</Text>
+          <Text style={styles.date}>{formatDate(item?.completed_at)}</Text>
         </View>
-      )}
-      
-      <View style={styles.logHeader}>
-        <Text style={styles.exerciseName}>{item.Exercise.name}</Text>
-        <Text style={styles.date}>{formatDate(item.completed_at)}</Text>
+
+        <View style={styles.logDetails}>
+          {item?.sets_completed !== null && item?.sets_completed !== undefined && (
+            <View style={styles.detailItem}>
+              <Ionicons name="fitness" size={16} color="#D68D54" />
+              <Text style={styles.detailText}>{item.sets_completed} sets</Text>
+            </View>
+          )}
+
+          {item?.reps_completed !== null && item?.reps_completed !== undefined && (
+            <View style={styles.detailItem}>
+              <Ionicons name="repeat" size={16} color="#D68D54" />
+              <Text style={styles.detailText}>{item.reps_completed} reps</Text>
+            </View>
+          )}
+
+          {item?.duration !== null && item?.duration !== undefined && (
+            <View style={styles.detailItem}>
+              <Ionicons name="time" size={16} color="#D68D54" />
+              <Text style={styles.detailText}>{formatDuration(item.duration)}</Text>
+            </View>
+          )}
+        </View>
+
+        {item?.Exercise?.muscle_group && (
+          <Text style={styles.muscleGroup}>
+            Target: {item.Exercise.muscle_group}
+          </Text>
+        )}
+
+        {item?.notes && (
+          <Text style={styles.notes}>{item.notes}</Text>
+        )}
       </View>
-      
-      <View style={styles.logDetails}>
-        {item.sets_completed && (
-          <View style={styles.detailItem}>
-            <Ionicons name="fitness" size={16} color="#D68D54" />
-            <Text style={styles.detailText}>{item.sets_completed} sets</Text>
-          </View>
-        )}
-        
-        {item.reps_completed && (
-          <View style={styles.detailItem}>
-            <Ionicons name="repeat" size={16} color="#D68D54" />
-            <Text style={styles.detailText}>{item.reps_completed} reps</Text>
-          </View>
-        )}
-        
-        {item.duration && (
-          <View style={styles.detailItem}>
-            <Ionicons name="time" size={16} color="#D68D54" />
-            <Text style={styles.detailText}>{formatDuration(item.duration)}</Text>
-          </View>
-        )}
-      </View>
-      
-      {item.Exercise.muscle_group && (
-        <Text style={styles.muscleGroup}>Target: {item.Exercise.muscle_group}</Text>
-      )}
-      
-      {item.notes && (
-        <Text style={styles.notes}>{item.notes}</Text>
-      )}
-    </View>
-  );
+    );
+  };
 
   if (loading) {
     return (
@@ -173,7 +217,7 @@ export default function WorkoutLogScreen() {
     );
   }
 
-  if (workoutLogs.length === 0) {
+  if (!Array.isArray(workoutLogs) || workoutLogs.length === 0) {
     return (
       <View style={styles.centerContainer}>
         <Ionicons name="fitness-outline" size={64} color="#D68D54" />
@@ -188,9 +232,11 @@ export default function WorkoutLogScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={workoutLogs}
+        data={Array.isArray(workoutLogs) ? workoutLogs : []}
         renderItem={renderWorkoutLogItem}
-        keyExtractor={(item) => item.log_id.toString()}
+        keyExtractor={(item, index) =>
+          item?.log_id ? item.log_id.toString() : index.toString()
+        }
         contentContainerStyle={styles.listContainer}
         refreshControl={
           <RefreshControl
