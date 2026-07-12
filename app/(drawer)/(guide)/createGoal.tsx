@@ -100,12 +100,12 @@ export default function CreateGoal() {
 
   const createGoal = async () => {
     if (!goalType.trim()) {
-      showAlert('Error', 'Please select goal type');
+      showAlert('Error', 'Please select goal type.');
       return;
     }
 
     if (!targetValue.trim()) {
-      showAlert('Error', 'Please enter target value');
+      showAlert('Error', 'Please enter target value.');
       return;
     }
 
