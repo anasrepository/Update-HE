@@ -118,6 +118,11 @@ export default function CreateGoal() {
       showAlert('Error', 'Please select a target date');
       return;
     }
+	
+	if (!description.trim()) {
+      showAlert('Error', 'Please write goal description');
+      return;
+    }
 
     try {
       setCreating(true);
