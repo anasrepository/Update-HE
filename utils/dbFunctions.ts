@@ -35,6 +35,8 @@ async function dropall(): Promise<void>{
   await axios.delete(`${apiUrl}/api/foods`)
   } catch(err){console.error('Can\'t drop | wont drop', err)}
 }
+
+
 class AchievementDBModal {
   static async get(filter?: Filter<Achievement>): Promise<Achievement[]> {
     let params = filter && Object.keys(filter).length > 0
@@ -69,12 +71,7 @@ const rawResult = await axios.get(`${apiUrl}/api/users/${userId}/achievements${p
 
     
   }
-  /*
-  static async delete(foodId: number){
-	console.log("Deleting food with id: ", foodId);
-	return api.delete('/foods/${foodId}');
-  }
-  */
+
   
   static async delete(foodId: number): Promise<void> {
     if (!foodId) {
@@ -89,6 +86,118 @@ const rawResult = await axios.get(`${apiUrl}/api/users/${userId}/achievements${p
   }
   
 }
+
+
+////////////////////////////////////////////////////////////////////////
+/*
+class AchievementDBModal {
+  // Get all achievement rules from achievements table
+  static async getAll(): Promise<Achievement[]> {
+    try {
+      const apiUrl = await API_URL();
+
+      const response = await axios.get(`${apiUrl}/api/achievements`);
+
+      console.log('All achievements raw response:', response.data);
+
+      const result = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.data)
+          ? response.data.data
+          : [];
+
+      return result;
+    } catch (error) {
+      console.error('❌ AchievementDBModal: Error fetching all achievements:', error);
+      return [];
+    }
+  }
+
+  // Get only achievements earned by current user from user_achievements table
+  static async getUserAchievements(): Promise<any[]> {
+    try {
+      const apiUrl = await API_URL();
+      const userId = await getUserId();
+
+      if (!userId) {
+        console.error('❌ AchievementDBModal: No user ID available');
+        return [];
+      }
+
+      const response = await axios.get(
+        `${apiUrl}/api/users/${userId}/achievements`
+      );
+
+      console.log('User achievements raw response:', response.data);
+
+      const result = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.data)
+          ? response.data.data
+          : [];
+
+      return result;
+    } catch (error) {
+      console.error('❌ AchievementDBModal: Error fetching user achievements:', error);
+      return [];
+    }
+  }
+
+  // Get all achievements and mark completed true/false
+  static async get(): Promise<any[]> {
+    try {
+      const allAchievements = await this.getAll();
+      const userAchievements = await this.getUserAchievements();
+
+      const earnedIds = userAchievements.map((ua: any) =>
+        ua.achievement_id || ua.id
+      );
+
+      const mergedAchievements = allAchievements.map((achievement: any) => {
+        const earnedAchievement = userAchievements.find((ua: any) =>
+          (ua.achievement_id || ua.id) === achievement.achievement_id
+        );
+
+        return {
+          ...achievement,
+          id: achievement.achievement_id,
+          title: achievement.name,
+          category: achievement.type,
+          xp: achievement.required_count,
+          completed: earnedIds.includes(achievement.achievement_id),
+          achieved_at: earnedAchievement?.achieved_at || null,
+        };
+      });
+
+      console.log('Merged achievements:', mergedAchievements);
+
+      return mergedAchievements;
+    } catch (error) {
+      console.error('❌ AchievementDBModal: Error merging achievements:', error);
+      return [];
+    }
+  }
+
+  static async update(payload: Partial<Achievement>): Promise<void> {
+    const submit = {
+      progress: payload.progress,
+    };
+
+    const userId = await getUserId();
+
+    if (!userId) {
+      console.error('❌ AchievementDBModal: No user ID available for update');
+      return;
+    }
+
+    const apiUrl = await API_URL();
+    const url = `${apiUrl}/api/users/${userId}/achievements/${payload.id}`;
+
+    await axios.put(url, submit);
+  }
+}
+*/
+////////////////////////////////////////////////////////////////////////
 
 class ExerciseDBModal {
   static async get(filter?: Filter<Exercise>): Promise<Exercise[]> {
