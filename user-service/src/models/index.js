@@ -35,6 +35,8 @@ User.hasMany(MealLog, { foreignKey: 'user_id' });
 User.belongsToMany(Achievement, { through: UserAchievement, foreignKey: 'user_id' });
 
 
+
+
 HealthProfile.belongsTo(User, { foreignKey: 'user_id' });
 Goal.belongsTo(User, { foreignKey: 'user_id' });
 
@@ -49,6 +51,21 @@ WorkoutPlan.belongsToMany(Exercise, {
   through: WorkoutPlanExercise,
   foreignKey: 'plan_id',
   otherKey: 'exercise_id'
+});
+
+UserAchievement.belongsTo(Achievement, {
+  foreignKey: 'achievement_id'
+});
+
+Achievement.hasMany(UserAchievement, {
+  foreignKey: 'achievement_id'
+});
+
+UserAchievement.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+User.hasMany(UserAchievement, {
+	foreignKey: 'user_id'	
 });
 
 
